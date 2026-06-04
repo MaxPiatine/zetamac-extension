@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Not on zetamac -->
+  <div id="screen-away" class="screen hidden">
+    <div class="logo">Zetamac Recorder</div>
+    <p class="hint">Navigate to<br><strong>arithmetic.zetamac.com</strong><br>to use this extension.</p>
+  </div>
+
+  <!-- Ready to start -->
+  <div id="screen-idle" class="screen hidden">
+    <div class="logo">Zetamac Recorder</div>
+    <p class="hint">Hit <strong>Start</strong> on zetamac.<br>Recording begins automatically<br>and stops when the timer ends.</p>
+  </div>
+
+  <!-- Recording -->
+  <div id="screen-recording" class="screen hidden">
+    <div class="rec-header">
+      <span class="rec-dot"></span>
+      <span id="rec-label">Recording</span>
+      <span id="rec-count" class="stat-pill">0 solved</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-val" id="live-avg">—</div><div class="stat-lbl">avg time</div></div>
+      <div class="stat-box"><div class="stat-val" id="live-fast">—</div><div class="stat-lbl">fastest</div></div>
+      <div class="stat-box"><div class="stat-val" id="live-errs">0</div><div class="stat-lbl">corrections</div></div>
+    </div>
+    <div class="heatmap-label">Response Time</div>
+    <div id="live-heatmap" class="heatmap"></div>
+    <div id="live-legend" class="legend"></div>
+    <button id="btn-stop" class="btn btn-red">■ Stop Early</button>
+  </div>
+
+  <!-- Results -->
+  <div id="screen-results" class="screen hidden">
+    <div class="logo">Session Results</div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-val" id="res-count">0</div><div class="stat-lbl">solved</div></div>
+      <div class="stat-box"><div class="stat-val" id="res-avg">—</div><div class="stat-lbl">avg time</div></div>
+      <div class="stat-box"><div class="stat-val" id="res-fast">—</div><div class="stat-lbl">fastest</div></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-val" id="res-slow">—</div><div class="stat-lbl">slowest</div></div>
+      <div class="stat-box"><div class="stat-val" id="res-errs">0</div><div class="stat-lbl">corrections</div></div>
+      <div class="stat-box"><div class="stat-val" id="res-dur">—</div><div class="stat-lbl">duration</div></div>
+    </div>
+    <div class="heatmap-label">Response Time Heatmap</div>
+    <div id="res-heatmap" class="heatmap"></div>
+    <div id="res-legend" class="legend"></div>
+    <button id="btn-new" class="btn btn-green">▶ New Session</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
