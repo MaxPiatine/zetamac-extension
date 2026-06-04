@@ -42,6 +42,7 @@ body {
 .btn:hover { filter: brightness(1.15); }
 .btn-green { background: #166534; color: #bbf7d0; }
 .btn-red   { background: #7f1d1d; color: #fecaca; }
+.btn-ghost { background: #1e293b; color: #475569; border: 1px solid #334155; }
 
 /* Recording header */
 .rec-header {

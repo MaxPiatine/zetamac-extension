@@ -117,8 +117,56 @@ chrome.storage.onChanged.addListener((changes) => {
   }
 });
 
+// ── Problem parser for persistent history ────────────────────────────────
+function parseProblemForPerf(text) {
+  if (!text || text === '?') return null;
+  const m = text.match(/(\d+)\s*([+\-−×÷])\s*(\d+)/);
+  if (!m) return null;
+  const a = parseInt(m[1]), op = m[2], b = parseInt(m[3]);
+
+  if (op === '×') {
+    // Normalise: the factor in 2–12 is the row
+    const row = a <= 12 ? a : b;
+    const col = a <= 12 ? b : a;
+    return `muldiv:${row}:${col}`;
+  }
+  if (op === '÷') {
+    // b is divisor (2–12), quotient = a/b
+    return `muldiv:${b}:${Math.round(a / b)}`;
+  }
+  if (op === '+') {
+    return `addsub:${Math.min(a, b)}:${Math.max(a, b)}`;
+  }
+  if (op === '-' || op === '−') {
+    const c = a - b;
+    return `addsub:${Math.min(b, c)}:${Math.max(b, c)}`;
+  }
+  return null;
+}
+
+function updatePerfData(problems) {
+  chrome.storage.local.get(['perfData', 'perfSessions'], data => {
+    const perf     = data.perfData     || {};
+    const sessions = (data.perfSessions || 0) + 1;
+    for (const p of problems) {
+      const key = parseProblemForPerf(p.text);
+      if (!key) continue;
+      if (!perf[key]) perf[key] = { n: 0, ms: 0 };
+      perf[key].n++;
+      perf[key].ms += p.time;
+    }
+    chrome.storage.local.set({ perfData: perf, perfSessions: sessions });
+  });
+}
+
+// ── Open history page ─────────────────────────────────────────────────────
+function openHistory() {
+  chrome.tabs.create({ url: chrome.runtime.getURL('heatmap.html') });
+}
+
 function showResults(problems, sessionStart) {
   if (!problems.length) { showScreen('screen-idle'); return; }
+  updatePerfData(problems);
   const stats = buildStats(problems);
   const dur = sessionStart ? Date.now() - sessionStart : null;
 
@@ -145,6 +193,9 @@ document.getElementById('btn-stop').addEventListener('click', () => {
     });
   }, 400);
 });
+
+document.getElementById('btn-history-idle').addEventListener('click', openHistory);
+document.getElementById('btn-history-results').addEventListener('click', openHistory);
 
 document.getElementById('btn-new').addEventListener('click', () => {
   chrome.storage.local.set({ problems: [], recording: false, sessionStart: null });

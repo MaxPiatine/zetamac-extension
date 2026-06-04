@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zetamac History</title>
+  <link rel="stylesheet" href="heatmap.css">
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div class="title">Zetamac Performance History</div>
+      <div class="meta">
+        <span id="stat-muldiv">— × ÷ problems</span>
+        <span class="sep">·</span>
+        <span id="stat-addsub">— + − problems</span>
+        <span class="sep">·</span>
+        <span id="stat-sessions">— sessions</span>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="muldiv">× ÷  <small>(2–12) × (2–100)</small></button>
+      <button class="tab"        data-tab="addsub">+ −  <small>(2–99) + (2–99)</small></button>
+    </div>
+
+    <div id="empty-state" class="empty hidden">
+      Play your first session to build history.
+    </div>
+
+    <div id="pane-muldiv" class="pane">
+      <div class="scroll-wrap">
+        <canvas id="canvas-muldiv"></canvas>
+      </div>
+    </div>
+
+    <div id="pane-addsub" class="pane hidden">
+      <div class="scroll-wrap">
+        <canvas id="canvas-addsub"></canvas>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span class="leg-label">Faster</span>
+      <div class="leg-bar"></div>
+      <span class="leg-label">Avg</span>
+      <div class="leg-bar leg-bar-right"></div>
+      <span class="leg-label">Slower</span>
+      <span class="leg-empty">■ No data</span>
+    </div>
+
+    <button id="btn-clear">Clear History</button>
+  </div>
+
+  <div id="tooltip"></div>
+  <script src="heatmap.js"></script>
+</body>
+</html>
