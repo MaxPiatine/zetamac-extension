@@ -9,14 +9,15 @@
     set: (obj)  => new Promise(r => chrome.storage.local.set(obj, r)),
   };
 
-  let recording      = false;
-  let currentProblem = null;
-  let problemStart   = null;
-  let backspaces     = 0;
-  let lastScore      = -1;
-  let pollInterval   = null;
-  let observer       = null;
-  let debounceTimer  = null;
+  let recording        = false;
+  let currentProblem   = null;
+  let problemStart     = null;
+  let backspaces       = 0;
+  let lastScore        = -1;
+  let justSaved        = null;  // problem text we just saved — ignore until DOM shows something new
+  let pollInterval     = null;
+  let observer         = null;
+  let debounceTimer    = null;
 
   // ── Detection ────────────────────────────────────────────────────────────
 
@@ -39,6 +40,14 @@
     if (!recording) return;
     const { problem, score } = readPage();
 
+    // Fill in currentProblem if it's null (DOM was transitioning when score incremented).
+    // Guard: skip if problem matches what we just saved — that's the old answer still in DOM.
+    if (currentProblem === null && problem !== null && problem !== justSaved && problemStart !== null) {
+      currentProblem = problem;
+      log('Captured delayed problem:', problem);
+    }
+
+    // Init
     if (lastScore === -1) {
       if (score === null) return;
       lastScore      = score;
@@ -48,16 +57,18 @@
       return;
     }
 
+    // Score incremented → problem was answered
     if (score !== null && score > lastScore) {
       log('Score:', lastScore, '→', score);
-      if (currentProblem && problemStart) {
-        saveProblem(currentProblem, Date.now() - problemStart, backspaces);
+      if (problemStart) {
+        // Always save timing even if we missed the problem text (label as '?')
+        saveProblem(currentProblem ?? '?', Date.now() - problemStart, backspaces);
+        justSaved = currentProblem; // null if we didn't have text
       }
       backspaces     = 0;
       lastScore      = score;
-      currentProblem = problem;
+      currentProblem = null;
       problemStart   = Date.now();
-      log('Next problem:', problem);
     }
   }
 
@@ -94,10 +105,27 @@
   async function stopRecording() {
     if (!recording) return;
     recording = false;
+    stopTracking();
+
+    // Flush any score increment that happened in the last polling gap
+    const { problem, score } = readPage();
+    if (score !== null && score > lastScore) {
+      log('Flushing late score:', lastScore, '→', score);
+      if (problemStart) {
+        await saveProblem(currentProblem ?? '?', Date.now() - problemStart, backspaces);
+        backspaces = 0;
+        justSaved  = currentProblem;
+      }
+      lastScore      = score;
+      currentProblem = (problem && problem !== justSaved) ? problem : null;
+      problemStart   = Date.now();
+    }
+
+    // Save whatever was in-progress at stop time
     if (currentProblem && problemStart) {
       await saveProblem(currentProblem, Date.now() - problemStart, backspaces);
     }
-    stopTracking();
+
     await storage.set({ recording: false });
     log('Recording stopped');
   }

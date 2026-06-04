@@ -36,7 +36,8 @@ function renderHeatmap(containerId, problems) {
     const cell = document.createElement('div');
     cell.className = 'hm-cell' + (p.backspaces > 0 ? ' has-backspace' : '');
     cell.style.background = timeToColor(p.time, stats.avg, stats.maxDev);
-    cell.title = `#${i + 1}: ${p.text}\nTime: ${fmt(p.time)}\nCorrections: ${p.backspaces}`;
+    const label = p.text === '?' ? '(missed label)' : p.text;
+    cell.title = `#${i + 1}: ${label}\nTime: ${fmt(p.time)}\nCorrections: ${p.backspaces}`;
     container.appendChild(cell);
   });
 }
@@ -147,5 +148,7 @@ document.getElementById('btn-stop').addEventListener('click', () => {
 
 document.getElementById('btn-new').addEventListener('click', () => {
   chrome.storage.local.set({ problems: [], recording: false, sessionStart: null });
-  showScreen('screen-idle');
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.update(tabs[0].id, { url: 'https://arithmetic.zetamac.com/' });
+  });
 });

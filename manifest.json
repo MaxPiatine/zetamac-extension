@@ -3,7 +3,7 @@
   "name": "Zetamac Session Recorder",
   "version": "1.0",
   "description": "Records Zetamac sessions with response-time heatmap and error tracking",
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage", "activeTab", "tabs"],
   "action": {
     "default_popup": "popup.html",
     "default_title": "Zetamac Recorder"
