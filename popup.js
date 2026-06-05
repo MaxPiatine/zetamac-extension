@@ -37,8 +37,9 @@ function renderHeatmap(containerId, problems) {
     cell.className = 'hm-cell' + (p.backspaces > 0 ? ' has-backspace' : '');
     cell.style.background = timeToColor(p.time, stats.avg, stats.scale);
 
-    const label = p.text === '?' ? 'unknown' : p.text;
-    const tip   = `#${i + 1}  ${label}\n${fmt(p.time)}${p.backspaces > 0 ? `  ·  ${p.backspaces} correction${p.backspaces > 1 ? 's' : ''}` : ''}`;
+    const tip = p.text === '?'
+      ? `#${i + 1}  (answered too fast to capture)\n${fmt(p.time)}${p.backspaces > 0 ? `  ·  ${p.backspaces} correction${p.backspaces > 1 ? 's' : ''}` : ''}`
+      : `#${i + 1}  ${p.text}\n${fmt(p.time)}${p.backspaces > 0 ? `  ·  ${p.backspaces} correction${p.backspaces > 1 ? 's' : ''}` : ''}`;
 
     cell.addEventListener('mouseenter', e => {
       cellTooltip.textContent = tip;

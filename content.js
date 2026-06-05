@@ -68,8 +68,8 @@
         // Use lastSeenProblem as fallback before giving up and labelling '?'
         const label = currentProblem ?? lastSeenProblem ?? '?';
         saveProblem(label, Date.now() - problemStart, backspaces);
-        justSaved       = label;
-        lastSeenProblem = null;  // reset so we don't reuse the same label twice
+        justSaved = label;
+        // Don't clear lastSeenProblem — justSaved already prevents reuse of the same label
       }
       backspaces     = 0;
       lastScore      = score;
