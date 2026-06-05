@@ -8,6 +8,9 @@
     "default_popup": "popup.html",
     "default_title": "Zetamac Recorder"
   },
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["*://arithmetic.zetamac.com/*"],

@@ -14,7 +14,8 @@
   let problemStart     = null;
   let backspaces       = 0;
   let lastScore        = -1;
-  let justSaved        = null;  // problem text we just saved — ignore until DOM shows something new
+  let justSaved        = null;
+  let lastSeenProblem  = null;  // most recent non-null, non-justSaved problem text
   let pollInterval     = null;
   let observer         = null;
   let debounceTimer    = null;
@@ -40,6 +41,9 @@
     if (!recording) return;
     const { problem, score } = readPage();
 
+    // Track last clean problem seen (not the just-saved one)
+    if (problem && problem !== justSaved) lastSeenProblem = problem;
+
     // Fill in currentProblem if it's null (DOM was transitioning when score incremented).
     // Guard: skip if problem matches what we just saved — that's the old answer still in DOM.
     if (currentProblem === null && problem !== null && problem !== justSaved && problemStart !== null) {
@@ -61,9 +65,11 @@
     if (score !== null && score > lastScore) {
       log('Score:', lastScore, '→', score);
       if (problemStart) {
-        // Always save timing even if we missed the problem text (label as '?')
-        saveProblem(currentProblem ?? '?', Date.now() - problemStart, backspaces);
-        justSaved = currentProblem; // null if we didn't have text
+        // Use lastSeenProblem as fallback before giving up and labelling '?'
+        const label = currentProblem ?? lastSeenProblem ?? '?';
+        saveProblem(label, Date.now() - problemStart, backspaces);
+        justSaved       = label;
+        lastSeenProblem = null;  // reset so we don't reuse the same label twice
       }
       backspaces     = 0;
       lastScore      = score;
@@ -80,7 +86,7 @@
 
   function startTracking() {
     stopTracking();
-    backspaces = 0; currentProblem = null; problemStart = null; lastScore = -1;
+    backspaces = 0; currentProblem = null; problemStart = null; lastScore = -1; lastSeenProblem = null; justSaved = null;
 
     document.addEventListener('keydown', handleKeydown);
 
@@ -166,10 +172,11 @@
         log('Start clicked. Duration:', duration / 1000, 's');
         // Set before page navigates to /game
         chrome.storage.local.set({
-          recording:    true,
-          problems:     [],
-          sessionStart: Date.now(),
+          recording:     true,
+          problems:      [],
+          sessionStart:  Date.now(),
           duration,
+          sessionLogged: false,
         });
       });
     } else {

@@ -7,6 +7,7 @@
 </head>
 <body>
   <div class="page">
+
     <div class="header">
       <div class="title">Zetamac Performance History</div>
       <div class="meta">
@@ -19,33 +20,49 @@
     </div>
 
     <div class="tabs">
-      <button class="tab active" data-tab="muldiv">× ÷  <small>(2–12) × (2–100)</small></button>
+      <button class="tab active" data-tab="muldiv">× ÷ <small>(2–12) × (2–100)</small></button>
       <button class="tab"        data-tab="addsub">+ −  <small>(2–99) + (2–99)</small></button>
+      <button class="tab"        data-tab="daily">Daily</button>
     </div>
 
-    <div id="empty-state" class="empty hidden">
-      Play your first session to build history.
-    </div>
-
+    <!-- × ÷ pane -->
     <div id="pane-muldiv" class="pane">
-      <div class="scroll-wrap">
-        <canvas id="canvas-muldiv"></canvas>
+      <div id="empty-muldiv" class="empty hidden">
+        No × ÷ data yet. Complete a session to populate this grid.
+      </div>
+      <div id="grid-muldiv" class="hidden">
+        <div class="scroll-wrap">
+          <canvas id="canvas-muldiv"></canvas>
+        </div>
       </div>
     </div>
 
+    <!-- + − pane -->
     <div id="pane-addsub" class="pane hidden">
-      <div class="scroll-wrap">
-        <canvas id="canvas-addsub"></canvas>
+      <div id="empty-addsub" class="empty hidden">
+        No + − data yet. Complete a session to populate this grid.
+      </div>
+      <div id="grid-addsub" class="hidden">
+        <div class="scroll-wrap">
+          <canvas id="canvas-addsub"></canvas>
+        </div>
       </div>
     </div>
 
-    <div class="legend">
+    <!-- Daily pane -->
+    <div id="pane-daily" class="pane hidden">
+      <div class="empty">
+        Daily bests and averages will appear here.<br>
+        Complete a few sessions to start building your history.
+      </div>
+    </div>
+
+    <div id="legend-row" class="legend">
       <span class="leg-label">Faster</span>
       <div class="leg-bar"></div>
-      <span class="leg-label">Avg</span>
-      <div class="leg-bar leg-bar-right"></div>
       <span class="leg-label">Slower</span>
-      <span class="leg-empty">■ No data</span>
+      <div class="leg-bar-sep"></div>
+      <span class="leg-empty-label">No data</span>
     </div>
 
     <button id="btn-clear">Clear History</button>
