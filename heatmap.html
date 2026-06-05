@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zetamac History</title>
+  <link rel="stylesheet" href="heatmap.css">
+</head>
+<body>
+  <div class="page">
+
+    <div class="header">
+      <div class="title">Zetamac Performance History</div>
+      <div class="meta">
+        <span id="stat-muldiv">— × ÷ problems</span>
+        <span class="sep">·</span>
+        <span id="stat-addsub">— + − problems</span>
+        <span class="sep">·</span>
+        <span id="stat-sessions">— sessions</span>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="muldiv">× ÷ <small>(2–12) × (2–100)</small></button>
+      <button class="tab"        data-tab="addsub">+ −  <small>(2–99) + (2–99)</small></button>
+      <button class="tab"        data-tab="daily">Daily</button>
+    </div>
+
+    <!-- × ÷ pane -->
+    <div id="pane-muldiv" class="pane">
+      <div id="empty-muldiv" class="empty hidden">
+        No × ÷ data yet. Complete a session to populate this grid.
+      </div>
+      <div id="grid-muldiv" class="hidden">
+        <div class="scroll-wrap">
+          <canvas id="canvas-muldiv"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- + − pane -->
+    <div id="pane-addsub" class="pane hidden">
+      <div id="empty-addsub" class="empty hidden">
+        No + − data yet. Complete a session to populate this grid.
+      </div>
+      <div id="grid-addsub" class="hidden">
+        <div class="scroll-wrap">
+          <canvas id="canvas-addsub"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daily pane -->
+    <div id="pane-daily" class="pane hidden">
+      <div class="empty">
+        Daily bests and averages will appear here.<br>
+        Complete a few sessions to start building your history.
+      </div>
+    </div>
+
+    <div id="legend-row" class="legend">
+      <span class="leg-label">Faster</span>
+      <div class="leg-bar"></div>
+      <span class="leg-label">Slower</span>
+      <div class="leg-bar-sep"></div>
+      <span class="leg-empty-label">No data</span>
+    </div>
+
+    <button id="btn-clear">Clear History</button>
+  </div>
+
+  <div id="tooltip"></div>
+  <script src="heatmap.js"></script>
+</body>
+</html>

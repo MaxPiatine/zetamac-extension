@@ -5,55 +5,117 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <!-- Not on zetamac -->
-  <div id="screen-away" class="screen hidden">
-    <div class="logo">Zetamac Recorder</div>
-    <p class="hint">Navigate to<br><strong>arithmetic.zetamac.com</strong><br>to use this extension.</p>
-  </div>
+  <div id="root">
 
-  <!-- Ready to start -->
-  <div id="screen-idle" class="screen hidden">
-    <div class="logo">Zetamac Recorder</div>
-    <p class="hint">Hit <strong>Start</strong> on zetamac.<br>Recording begins automatically<br>and stops when the timer ends.</p>
-  </div>
+    <!-- Away: not on zetamac -->
+    <div id="s-away" class="screen">
+      <div class="wordmark">ZETAMAC</div>
+      <div class="away-body">
+        <p class="away-msg">Open <strong>arithmetic.zetamac.com</strong> to use this extension.</p>
+      </div>
+    </div>
 
-  <!-- Recording -->
-  <div id="screen-recording" class="screen hidden">
-    <div class="rec-header">
-      <span class="rec-dot"></span>
-      <span id="rec-label">Recording</span>
-      <span id="rec-count" class="stat-pill">0 solved</span>
+    <!-- Idle: on zetamac, waiting -->
+    <div id="s-idle" class="screen hidden">
+      <div class="wordmark">ZETAMAC</div>
+      <div class="idle-body">
+        <div class="idle-cue">
+          <div class="idle-dot"></div>
+          <span>Ready to record</span>
+        </div>
+        <p class="idle-hint">Hit <strong>Start</strong> on zetamac — recording begins automatically and stops with the timer.</p>
+        <button id="btn-history-idle" class="btn-ghost">History →</button>
+      </div>
     </div>
-    <div class="stat-row">
-      <div class="stat-box"><div class="stat-val" id="live-avg">—</div><div class="stat-lbl">avg time</div></div>
-      <div class="stat-box"><div class="stat-val" id="live-fast">—</div><div class="stat-lbl">fastest</div></div>
-      <div class="stat-box"><div class="stat-val" id="live-errs">0</div><div class="stat-lbl">corrections</div></div>
-    </div>
-    <div class="heatmap-label">Response Time</div>
-    <div id="live-heatmap" class="heatmap"></div>
-    <div id="live-legend" class="legend"></div>
-    <button id="btn-stop" class="btn btn-red">■ Stop Early</button>
-  </div>
 
-  <!-- Results -->
-  <div id="screen-results" class="screen hidden">
-    <div class="logo">Session Results</div>
-    <div class="stat-row">
-      <div class="stat-box"><div class="stat-val" id="res-count">0</div><div class="stat-lbl">solved</div></div>
-      <div class="stat-box"><div class="stat-val" id="res-avg">—</div><div class="stat-lbl">avg time</div></div>
-      <div class="stat-box"><div class="stat-val" id="res-fast">—</div><div class="stat-lbl">fastest</div></div>
-    </div>
-    <div class="stat-row">
-      <div class="stat-box"><div class="stat-val" id="res-slow">—</div><div class="stat-lbl">slowest</div></div>
-      <div class="stat-box"><div class="stat-val" id="res-errs">0</div><div class="stat-lbl">corrections</div></div>
-      <div class="stat-box"><div class="stat-val" id="res-dur">—</div><div class="stat-lbl">duration</div></div>
-    </div>
-    <div class="heatmap-label">Response Time Heatmap</div>
-    <div id="res-heatmap" class="heatmap"></div>
-    <div id="res-legend" class="legend"></div>
-    <button id="btn-new" class="btn btn-green">▶ New Session</button>
-  </div>
+    <!-- Recording -->
+    <div id="s-recording" class="screen hidden">
+      <div class="rec-header">
+        <div class="rec-pill">
+          <span class="rec-dot"></span>
+          Recording
+        </div>
+        <div id="rec-count" class="rec-count">0 solved</div>
+      </div>
 
+      <div class="rec-stats">
+        <div class="rec-stat">
+          <div id="live-avg"  class="rec-stat-val">—</div>
+          <div class="rec-stat-lbl">avg</div>
+        </div>
+        <div class="rec-stat">
+          <div id="live-fast" class="rec-stat-val">—</div>
+          <div class="rec-stat-lbl">fastest</div>
+        </div>
+        <div class="rec-stat">
+          <div id="live-errs" class="rec-stat-val">0</div>
+          <div class="rec-stat-lbl">corrections</div>
+        </div>
+      </div>
+
+      <div class="map-wrap">
+        <div class="map-label">Response Time</div>
+        <div id="live-heatmap" class="heatmap"></div>
+      </div>
+      <div id="live-legend" class="legend"></div>
+
+      <button id="btn-stop" class="btn-stop">Stop Early</button>
+    </div>
+
+    <!-- Done (Session + History tabs) -->
+    <div id="s-done" class="screen hidden">
+      <div class="tab-bar">
+        <button class="tab active" data-tab="session">Session</button>
+        <button class="tab"        data-tab="history">History</button>
+      </div>
+
+      <!-- Session pane -->
+      <div id="pane-session">
+        <div class="stat-row">
+          <div class="stat-cell">
+            <div id="res-count" class="stat-val">—</div>
+            <div class="stat-lbl">solved</div>
+          </div>
+          <div class="stat-div"></div>
+          <div class="stat-cell">
+            <div id="res-avg"  class="stat-val">—</div>
+            <div class="stat-lbl">avg time</div>
+          </div>
+          <div class="stat-div"></div>
+          <div class="stat-cell">
+            <div id="res-errs" class="stat-val">0</div>
+            <div class="stat-lbl">corrections</div>
+          </div>
+        </div>
+
+        <div class="map-section">
+          <div class="map-label">Response Time</div>
+          <div id="res-heatmap" class="heatmap"></div>
+        </div>
+
+        <div class="legend-section">
+          <div id="res-legend" class="legend"></div>
+        </div>
+
+        <div class="action-row">
+          <button id="btn-new"             class="btn-primary">New Session</button>
+          <button id="btn-history-results" class="btn-ghost">History →</button>
+        </div>
+      </div>
+
+      <!-- History pane -->
+      <div id="pane-history" class="hidden">
+        <div id="history-list" class="history-list">
+          <div class="empty-state">
+            No history yet.<br>Complete more sessions to see your streaks and daily bests.
+          </div>
+        </div>
+        <button id="btn-heatmap" class="btn-ghost full-w">View Performance Heatmap →</button>
+      </div>
+    </div>
+
+  </div>
+  <div id="cell-tooltip"></div>
   <script src="popup.js"></script>
 </body>
 </html>
